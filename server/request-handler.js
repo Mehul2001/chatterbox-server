@@ -63,16 +63,22 @@ var requestHandler = function(request, response) {
   // node to actually send all the data over to the client.
   var obj = {'results': []};
 
+
+
+  if(request._postData !== undefined) {
+    obj.results.push(request._postData);
+  }
+
+  if(request.url === '/arglebargle') {
+    response.writeHead(404, headers);
+  }
+
   if(request.method === 'POST') {
     response.writeHead(201, headers);
   } 
-  if(request.method === 'GET') {
-
-    if(request.postdata === undefined) {
-      response.writeHead(404, headers);
-    } else {
-      response.writeHead(200, headers);
-    }
+  if(obj.results.length !== 0 && request.method === 'GET') {
+    response.writeHead(200, headers);
+    
   }
   response.end(JSON.stringify(obj));
   
