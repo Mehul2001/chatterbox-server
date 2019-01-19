@@ -1,5 +1,8 @@
+//import { hostname } from 'os';
+
 /* Import node's http module: */
 var http = require('http');
+var handleRequest = require('./request-handler.js');
 
 
 // Every server needs to listen on a port with a unique number. The
@@ -9,11 +12,11 @@ var http = require('http');
 // ports are 8080 and 1337.
 var port = 3000;
 
+
 // For now, since you're running this server on your local machine,
 // we'll have it listen on the IP address 127.0.0.1, which is a
 // special address that always refers to localhost.
 var ip = '127.0.0.1';
-
 
 
 // We use node's http module to create a server.
@@ -22,9 +25,30 @@ var ip = '127.0.0.1';
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-var server = http.createServer(handleRequest);
+
+
+var server = http.createServer(handleRequest.requestHandler);
 console.log('Listening on http://' + ip + ':' + port);
-server.listen(port, ip);
+server.listen(port, ip, () => {
+    console.log(`Server running at http://${ip}:${port}/`);
+});
+
+
+//This is our example --------------------------------
+// const server = http.createServer((request, response) => {
+//     response.statusCode = 200;
+//     response.setHeader('Content-Type', 'text/plain');
+//     response.end('Tim\n');
+// });
+// server.listen(port, hostname), () => {
+//     console.log(`Server running at http://${hostname}:${port}/`);
+// };
+
+
+//This is our example ---------------------------
+
+
+
 
 // To start this server, run:
 //
