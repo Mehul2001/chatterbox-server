@@ -62,26 +62,25 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   var obj = {'results': []};
-
-
-
-  if(request._postData !== undefined) {
-    obj.results.push(request._postData);
-  }
-
-  if(request.url === '/arglebargle') {
+  if(request.url !== '/classes/messages') {
     response.writeHead(404, headers);
   }
-
   if(request.method === 'POST') {
+    let body = [];
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    }).on('end', () => {
+      body = Buffer.concat(body).toString();
+      obj.results.push(JSON.parse(body));
+    });
     response.writeHead(201, headers);
+    response.end();
   } 
   if(obj.results.length !== 0 && request.method === 'GET') {
     response.writeHead(200, headers);
-    
+    response.end(JSON.stringify(obj));
   }
   response.end(JSON.stringify(obj));
-  
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -94,11 +93,6 @@ var requestHandler = function(request, response) {
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
 
-var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10 // Seconds.
-};
+
 
 exports.requestHandler = requestHandler;

@@ -35,22 +35,6 @@ server.listen(port, ip, () => {
 });
 
 
-//This is our example --------------------------------
-// const server = http.createServer((request, response) => {
-//     response.statusCode = 200;
-//     response.setHeader('Content-Type', 'text/plain');
-//     response.end('Tim\n');
-// });
-// server.listen(port, hostname), () => {
-//     console.log(`Server running at http://${hostname}:${port}/`);
-// };
-
-
-//This is our example ---------------------------
-
-
-
-
 // To start this server, run:
 //
 //   node basic-server.js
