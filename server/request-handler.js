@@ -35,7 +35,12 @@ var requestHandler = function(request, response) {
 
   // The outgoing status.
   var statusCode = 200;
-
+  var defaultCorsHeaders = {
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'access-control-allow-headers': 'content-type, accept',
+    'access-control-max-age': 10 // Seconds.
+  };
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
 
@@ -61,6 +66,14 @@ var requestHandler = function(request, response) {
   if(request.method === 'POST') {
     response.writeHead(201, headers);
   } 
+  if(request.method === 'GET') {
+
+    if(request.postdata === undefined) {
+      response.writeHead(404, headers);
+    } else {
+      response.writeHead(200, headers);
+    }
+  }
   response.end(JSON.stringify(obj));
   
 };
