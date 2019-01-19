@@ -12,8 +12,8 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 
-
-
+// Declaring variable obj 
+var obj = {results: []};
 
 var requestHandler = function(request, response) {
   
@@ -48,12 +48,12 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  // headers['Content-Type'] = 'text/plain';
+  
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
-
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -61,26 +61,24 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  var obj = {'results': []};
+  
   if(request.url !== '/classes/messages') {
     response.writeHead(404, headers);
-  }
-  if(request.method === 'POST') {
+    response.end();
+  } else if(request.method === 'POST') {
     let body = [];
     request.on('data', (chunk) => {
       body.push(chunk);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
       obj.results.push(JSON.parse(body));
+      response.writeHead(201, headers);
+      response.end(JSON.stringify(body));
     });
-    response.writeHead(201, headers);
-    response.end();
-  } 
-  if(obj.results.length !== 0 && request.method === 'GET') {
+  } else if(request.method === 'GET') {
     response.writeHead(200, headers);
     response.end(JSON.stringify(obj));
   }
-  response.end(JSON.stringify(obj));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -92,7 +90,5 @@ var requestHandler = function(request, response) {
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-
-
 
 exports.requestHandler = requestHandler;
