@@ -83,7 +83,7 @@ var requestHandler = function(request, response) {
   } else if(request.method === 'OPTIONS') {
     response.writeHead(200, headers);
     response.end();
-    }
+  }
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
