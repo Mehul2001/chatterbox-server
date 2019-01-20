@@ -49,7 +49,7 @@ var requestHandler = function(request, response) {
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
   // headers['Content-Type'] = 'text/plain';
-  
+
   headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
@@ -62,7 +62,9 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   
-  if(request.url !== '/classes/messages') {
+  console.log('URL: ', request.url);
+
+  if(!request.url.includes('/classes/messages')) {
     response.writeHead(404, headers);
     response.end();
   } else if(request.method === 'POST') {
@@ -78,7 +80,10 @@ var requestHandler = function(request, response) {
   } else if(request.method === 'GET') {
     response.writeHead(200, headers);
     response.end(JSON.stringify(obj));
-  }
+  } else if(request.method === 'OPTIONS') {
+    response.writeHead(200, headers);
+    response.end();
+    }
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
